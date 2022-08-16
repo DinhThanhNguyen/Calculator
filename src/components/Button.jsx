@@ -21,6 +21,16 @@ export default function Button({ value }) {
 
     let { calc, setCalc } = useContext(CalcContext)
 
+    const math = (prevNumber, currentNumber, sign) => {
+        const result = {
+            '+': (prevNumber, currentNumber) => prevNumber + currentNumber,
+            '-': (prevNumber, currentNumber) => prevNumber - currentNumber,
+            'x': (prevNumber, currentNumber) => prevNumber * currentNumber,
+            '/': (prevNumber, currentNumber) => prevNumber / currentNumber,
+        }
+        return result[sign](prevNumber, currentNumber);
+    }
+
     const commaClick = () => {
         setCalc({
             ...calc,
@@ -69,16 +79,6 @@ export default function Button({ value }) {
 
     const signClick = () => {
         if (calc.res && calc.num) {
-            const math = (prevNumber, currentNumber, sign) => {
-                const result = {
-                    '+': (prevNumber, currentNumber) => prevNumber + currentNumber,
-                    '-': (prevNumber, currentNumber) => prevNumber - currentNumber,
-                    'x': (prevNumber, currentNumber) => prevNumber * currentNumber,
-                    '/': (prevNumber, currentNumber) => prevNumber / currentNumber,
-                }
-                // calc.num = result[sign](prevNumber, currentNumber)
-                return result[sign](prevNumber, currentNumber);
-            }
             setCalc({
                 sign: value,
                 res: math(calc.res, calc.num, calc.sign),
@@ -94,19 +94,35 @@ export default function Button({ value }) {
     }
 
     const percentClick = () => {
-        setCalc({
-            num: (calc.num / 100),
-            res: (calc.res / 100),
-            sign: ''
-        })
+        if (calc.res && calc.num) {
+            setCalc({
+                sign: value,
+                res: (math(calc.res, calc.num, calc.sign) / 100),
+                num: 0
+            })
+        } else {
+            setCalc({
+                num: (calc.num / 100),
+                res: (calc.res / 100),
+                sign: ''
+            })
+        }
     }
 
     const invertedClick = () => {
-        setCalc({
-            num: calc.num ? calc.num * -1 : 0,
-            res: calc.res ? calc.res * -1 : 0,
-            sign: ''
-        })
+        if (calc.res && calc.num) {
+            setCalc({
+                sign: value,
+                res: (math(calc.res, calc.num, calc.sign) * -1),
+                num: 0
+            })
+        } else {
+            setCalc({
+                num: calc.num ? calc.num * -1 : 0,
+                res: calc.res ? calc.res * -1 : 0,
+                sign: ''
+            })
+        }
     }
 
 
