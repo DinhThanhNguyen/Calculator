@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import './calculator.css';
 
 export default function Calculator({ children }) {
     return (
